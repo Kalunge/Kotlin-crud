@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -34,9 +35,9 @@ class UserController(@Autowired private val userRepository: UserRepository) {
     }
 
     @GetMapping("/{id}")
-    fun updateUser(@RequestBody user:User, @PathVariable("id") userId:Long): ResponseEntity<User> {
+    fun updateUser(@RequestBody user: User, @PathVariable("id") userId: Long): ResponseEntity<User> {
         val existingUser = userRepository.findById(userId).orElse(null)
-        if(existingUser == null) {
+        if (existingUser == null) {
             return ResponseEntity(HttpStatus.NOT_FOUND)
         }
 
@@ -45,5 +46,13 @@ class UserController(@Autowired private val userRepository: UserRepository) {
         return ResponseEntity(updatedUser, HttpStatus.OK)
     }
 
+    @DeleteMapping("/{id}")
+    fun deleteUser(@PathVariable("id") userId: Long, @RequestBody user: User): ResponseEntity<User> {
+        if (!userRepository.existsById(userId)) {
+            return ResponseEntity(HttpStatus.NOT_FOUND)
+        }
 
+        userRepository.deleteById(userId)
+        return ResponseEntity(HttpStatus.NO_CONTENT);
+    }
 }
