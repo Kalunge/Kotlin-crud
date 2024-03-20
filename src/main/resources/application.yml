@@ -1,8 +1,13 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/kotlin_demo_db
-    username: kalunge
-    password: demo_password
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/kotlin_demo_db}
+    username: ${PG_USER:kalunge}
+    password: ${PG_PASSWORD:demo_password}
+    hikari:
+      connection-timeout: 60000
+      maximum-pool-size: 5
+      minimum-idle: 1
+      idle-timeout: 30000
   jpa:
     properties:
       hibernate:
